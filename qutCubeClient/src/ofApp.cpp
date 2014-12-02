@@ -24,10 +24,15 @@ void ofApp::setup(){
     lExStyle &= ~(WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE | WS_EX_STATICEDGE);
     SetWindowLong(hwnd, GWL_EXSTYLE, lExStyle);
     SetWindowPos(hwnd, NULL, 0,0,0,0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER);
-    ofSetWindowPosition(0,0);
+    //ofSetWindowPosition(0,0);
 
     screenBounds.set(0,0, windoww, windowh);
 
+    if (SM.whichClientAmI() < 2){
+        screenBounds.set(0,0,1920, 1750);
+    }
+
+    cout << 1920 << " " << 1750 << " " << windoww << " " << windowh << endl;
 #endif
 
 
@@ -56,24 +61,39 @@ void ofApp::setup(){
             }
 
             //ofSetColor(ofRandom(0,255));
-            ofRect(i,j, 10, 10);
+            ofRect(i,j, 50, 50);
         }
     }
 
     fbo.end();
+
+
+    HWND cmd = GetConsoleWindow(); // get handle to console window
+    cout << cmd << endl;
+    ShowWindow(cmd, SW_SHOW);
+    ::SetForegroundWindow(cmd);
+
+
 
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
 
+    if (ofGetFrameNum() < 50){
+    //HWND hwnd = ofGetWin32Window();
+    //cout << hwnd << endl;
+    MoveWindow((HWND)ofGetWin32Window(),0, 0, screenBounds.width,screenBounds.height, false);
+    //SetWindowPos(hwnd, NULL, 50 + 50 * sin(ofGetElapsedTimef()),0,0,0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER);
+
+    }
 
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
 
-
+    ofBackground(ofColor::pink);
 
     ofSetColor(255);
     //fbo.draw(0,0, ofGetWidth(), ofGetHeight());
@@ -98,6 +118,8 @@ void ofApp::draw(){
         float yt =  intr.y;
         float wt =  intr.width;
         float ht =  intr.height;
+
+        printf ("%f, %f, %f, %f \n", x,y,w,h);
 
         ofMesh mesh;
         mesh.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
@@ -183,6 +205,10 @@ void ofApp::draw(){
     font.drawString(ipStr, 100,200);
     font.drawString("client: " + ofToString(clientID), 100,350);
 
+    ofSetColor(ofColor::cyan);
+    ofSetLineWidth(10);
+    ofLine(0,0,screenBounds.width, screenBounds.height);
+    ofLine(0,screenBounds.width,0, screenBounds.height);
 
 
 }
@@ -196,6 +222,7 @@ void ofApp::keyPressed(int key){
 void ofApp::keyReleased(int key){
 
 }
+
 
 //--------------------------------------------------------------
 void ofApp::mouseMoved(int x, int y ){
