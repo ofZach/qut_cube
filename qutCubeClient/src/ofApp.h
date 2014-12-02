@@ -26,4 +26,8 @@ class ofApp : public ofBaseApp{
         IPv4 ip;
         int clientID;
     
+        ofFbo fbo;
+        ofRectangle screenBounds;
+    
+    
 };

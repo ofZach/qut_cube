@@ -38,15 +38,27 @@ struct IPv4{
 
 
 
-
-
-
-
 //--------------------------------------------------------------------------------------------
 class settingsManager {
     
     
 public:
+    
+    
+    ofRectangle get2dResolution(){
+        
+        ofRectangle bigPixDim;
+        ofRectangle smallPixDim;
+        ofRectangle smallInWorldDim;
+        ofRectangle total;
+        bigPixDim.set(0,0,1920, 1750);
+        smallPixDim.set(0, 0, 1080, 1920);
+        float aspectRatio = 1080.0 / 1920.0;
+        smallInWorldDim.set(0,0, 1920/10.0, (1/aspectRatio) * (1920/10.0));
+        total.set(0,0, 1920*2, 1750 + smallInWorldDim.getHeight());
+        return total;
+        
+    }
     
     //----------------------------------------------
     bool getMyIP(IPv4 & myIP){
