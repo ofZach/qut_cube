@@ -29,7 +29,7 @@ void communicationManager::update(){
         
         if (addr == "/debug"){
             bool bDebug = m.getArgAsInt32(0) == 0 ? false : true;
-            
+            appPtr->debugEvent(bDebug);
         }
     }
 }
