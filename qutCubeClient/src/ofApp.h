@@ -2,7 +2,7 @@
 
 #include "ofMain.h"
 #include "settingsManager.h"
-
+#include "communicationManager.h"
 
 class ofApp : public ofBaseApp{
 
@@ -21,6 +21,18 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     
+    
+        void frameEvent(int newFrame);
+        void sceneEvent(int newScene);
+        void debugEvent(bool bBeDebug);
+        void resetEvent();
+    
+        int frame;
+        int scene;
+
+    
+    
+        communicationManager CM;
         settingsManager SM;
         ofTrueTypeFont font;
         IPv4 ip;
@@ -28,6 +40,8 @@ class ofApp : public ofBaseApp{
     
         ofFbo fbo;
         ofRectangle screenBounds;
+    
+        float missedFrameEnergy;
     
     
 };

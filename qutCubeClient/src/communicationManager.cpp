@@ -1,47 +1,38 @@
 
 
+#include "communicationManager.h"
+#include "ofApp.h"
 
-#pragma once
+    
+void communicationManager::setup(){
+    client.setup(6667);
+}
 
-#include "ofMain.h"
-#include "ofxOsc.h"
-
-class communicationManager {
-    
-    
-    int     frame;
-    bool    bReset;
-    int     scene;
-    
-    
-    ofxOscReceiver client;
-    
-    void setup(){
+void communicationManager::update(){
+    ofxOscMessage m;
+    while (client.hasWaitingMessages()){
+        client.getNextMessage(&m);
         
-        client.setup(6667);
+        string addr = m.getAddress();
         
-    }
-    
-    void update(){
+        if (addr == "/frame"){
+            appPtr->frameEvent(m.getArgAsInt32(0));
+        }
         
-        ofxOscMessage m;
-        while (client.hasWaitingMessages()){
-            client.getNextMessage(&m);
-            string addr = m.getAddress();
+        if (addr == "/scene"){
+            appPtr->sceneEvent(m.getArgAsInt32(0));
+        }
+        
+        if (addr == "/reset"){
+            bReset = true;
+        }
+        
+        if (addr == "/debug"){
+            bool bDebug = m.getArgAsInt32(0) == 0 ? false : true;
             
-            if (addr == "/frame"){
-                frame = m.getArgAsInt32(0);
-            }
-            
-            if (addr == "/scene"){
-                scene = m.getArgAsInt32(0);
-            }
-            
-            if (addr == "/reset"){
-                bReset = true;
-            }
         }
     }
+}
     
-};
+
 

@@ -11,7 +11,11 @@ void ofApp::setup(){
 
     screenBounds.set(0,0, ofGetWidth(), ofGetHeight());
 
-
+    CM.setup();
+    CM.appPtr = this;
+    
+    
+    
 #ifdef WIN32
     int windoww = GetSystemMetrics(SM_CXVIRTUALSCREEN);
     int windowh = GetSystemMetrics(SM_CYVIRTUALSCREEN);
@@ -32,7 +36,7 @@ void ofApp::setup(){
         screenBounds.set(0,0,1920, 1750);
     }
 
-    cout << 1920 << " " << 1750 << " " << windoww << " " << windowh << endl;
+    //cout << 1920 << " " << 1750 << " " << windoww << " " << windowh << endl;
 #endif
 
 
@@ -67,19 +71,60 @@ void ofApp::setup(){
 
     fbo.end();
 
-#ifdef WIN32
-    HWND cmd = GetConsoleWindow(); // get handle to console window
-    cout << cmd << endl;
-    ShowWindow(cmd, SW_SHOW);
-    ::SetForegroundWindow(cmd);
-#endif
+
+    
+    frame = 0;
+    scene = 0;
 
 
 }
 
+void ofApp::frameEvent(int newFrame){
+    
+    if (ofGetMousePressed()) return;
+    
+    int prevFrame = frame;
+    frame = newFrame;
+    if ((newFrame - prevFrame) != 1){
+        missedFrameEnergy = 1.0;
+    }
+    
+}
+void ofApp::sceneEvent(int newScene){
+    scene = newScene;
+}
+
+void ofApp::debugEvent(bool bBeDebug){
+    
+    if (bBeDebug){
+        #ifdef WIN32
+                HWND cmd = GetConsoleWindow(); // get handle to console window
+                ShowWindow(cmd, SW_SHOW);
+                ::SetForegroundWindow(cmd);
+        #endif
+    } else {
+        #ifdef WIN32
+                HWND cmd = ofGetWin32Window(); // get handle to console window
+                ::SetForegroundWindow(cmd);
+        #endif
+        
+    }
+}
+
+void ofApp::resetEvent(){
+    
+}
+
+
+
+
+
 //--------------------------------------------------------------
 void ofApp::update(){
 
+    CM.update();
+    missedFrameEnergy *= 0.99f;
+    
     #ifdef WIN32
     if (ofGetFrameNum() < 50){
         //HWND hwnd = ofGetWin32Window();
@@ -122,8 +167,7 @@ void ofApp::draw(){
         float wt =  intr.width;
         float ht =  intr.height;
 
-        printf ("%f, %f, %f, %f \n", x,y,w,h);
-
+        
         ofMesh mesh;
         mesh.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
 
@@ -144,7 +188,76 @@ void ofApp::draw(){
         fbo.getTextureReference().unbind();
 
     }
-    // which client am I
+
+
+
+    string ipStr = ofToString((int)ip.b1) + "." + ofToString((int)ip.b2) + "." + ofToString((int)ip.b3) + "." + ofToString((int)ip.b4);
+    ofSetColor(ofColor::red);
+    font.drawString(ipStr, 100,200);
+    font.drawString("client: " + ofToString(clientID) + "\nframe : " + ofToString(frame) + "\nscene : " + ofToString(scene), 100,350);
+    
+    ofSetColor(ofColor::cyan);
+    ofSetLineWidth(10);
+    ofLine(0,0,screenBounds.width, screenBounds.height);
+    ofLine(0,screenBounds.width,0, screenBounds.height);
+
+    
+    if (missedFrameEnergy > 0.01){
+        ofSetColor(255,0,255,255*missedFrameEnergy);
+            ofRect(screenBounds);
+        
+    }
+
+}
+
+//--------------------------------------------------------------
+void ofApp::keyPressed(int key){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::keyReleased(int key){
+
+}
+
+
+//--------------------------------------------------------------
+void ofApp::mouseMoved(int x, int y ){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::mouseDragged(int x, int y, int button){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::mousePressed(int x, int y, int button){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::mouseReleased(int x, int y, int button){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::windowResized(int w, int h){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::gotMessage(ofMessage msg){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::dragEvent(ofDragInfo dragInfo){
+
+}
+
+
+// which client am I
 
 
 //    ofRectangle bigPixDim;
@@ -200,64 +313,4 @@ void ofApp::draw(){
 //        }
 //    }
 
-    //fbo.draw(0,0);
-
-
-    string ipStr = ofToString((int)ip.b1) + "." + ofToString((int)ip.b2) + "." + ofToString((int)ip.b3) + "." + ofToString((int)ip.b4);
-    ofSetColor(ofColor::red);
-    font.drawString(ipStr, 100,200);
-    font.drawString("client: " + ofToString(clientID), 100,350);
-
-    ofSetColor(ofColor::cyan);
-    ofSetLineWidth(10);
-    ofLine(0,0,screenBounds.width, screenBounds.height);
-    ofLine(0,screenBounds.width,0, screenBounds.height);
-
-
-}
-
-//--------------------------------------------------------------
-void ofApp::keyPressed(int key){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::keyReleased(int key){
-
-}
-
-
-//--------------------------------------------------------------
-void ofApp::mouseMoved(int x, int y ){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseDragged(int x, int y, int button){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::mousePressed(int x, int y, int button){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseReleased(int x, int y, int button){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::windowResized(int w, int h){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::gotMessage(ofMessage msg){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::dragEvent(ofDragInfo dragInfo){
-
-}
+//fbo.draw(0,0);
