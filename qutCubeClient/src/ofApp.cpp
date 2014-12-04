@@ -9,12 +9,12 @@ ofxOscSender sender[12];
 //--------------------------------------------------------------
 void ofApp::setup(){
 
-    
+
     scene = 2;
 
     ofAppGLFWWindow * wp = (ofAppGLFWWindow *) window;
 
-    
+
 
     font.loadFont("frabk.ttf", 100);
 
@@ -133,7 +133,7 @@ void ofApp::setup(){
     ofSetVerticalSync(true);
     ofSetFrameRate(0);
 
-    
+
     if (SM.whichClientAmI() ==0){
         for (int i = 0; i < 12; i++){
             sender[i].setup("172.21.4." + ofToString(i + 11), 6667);
@@ -191,7 +191,7 @@ void ofApp::update(){
     #ifdef WIN32
     if (ofGetFrameNum() < 50){
         //HWND hwnd = ofGetWin32Window();
-        //cout << hwnd << endl;
+        //cout << hwnd << endl;g
         MoveWindow((HWND)ofGetWin32Window(),0, 0, screenBounds.width,screenBounds.height, false);
         //SetWindowPos(hwnd, NULL, 50 + 50 * sin(ofGetElapsedTimef()),0,0,0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER);
 
@@ -215,7 +215,7 @@ void ofApp::update(){
             currentLines[i].update(scale);
         }
     }
-    
+
     if (scene == 2 && SM.whichClientAmI() == 0){
         ofxOscMessage m;
         m.setAddress("/frame");
@@ -269,18 +269,18 @@ void ofApp::draw(){
 
         fbo.end();
     } else if (scene == 1){
-        
-        
+
+
         ofRectangle overallRect = SM.get2dResolution();
-        
+
         fbo.begin();
-        
+
         for (int i = 0; i < overallRect.width; i+=50){
             for (int j = 0; j < overallRect.height; j+=50){
-                
+
                 float pctx = ofMap(i, 0, overallRect.getWidth(), 100, 250);
                 float pcty = 0;
-                
+
                 if ((j/50) % 2 == 0){
                     if ((i/50) % 2 == 0) ofSetColor((int)pctx);
                     else ofSetColor((int)pcty);
@@ -288,54 +288,54 @@ void ofApp::draw(){
                     if ((i/50) % 2 == 0) ofSetColor((int)pcty);
                     else ofSetColor((int)pctx);
                 }
-                
+
                 //ofSetColor(ofRandom(0,255));
                 ofRect(i,j, 50, 50);
             }
         }
-        
+
         fbo.end();
     } else {
-        
+
         fbo.begin();
         ofClear(0,0,0,255);
         cout << "here yo " << endl;
         ofRectangle overallRect = SM.get2dResolution();
-        
-        
-        int ff = ofGetFrameNum();
+
+
+        int ff = frame;
         for (int i = -800; i < overallRect.width; i+=50){
             for (int j = -800; j < overallRect.height; j+=50){
-                
+
                 if ((ff / 1000) % 2 == 0){
                     float pctx = ofMap(i, 0, overallRect.getWidth(), 100, 250);
                     float pcty = 0;
-                    
+
                     if ((i/50) % 10 == 0){
                        ofSetColor((int)255);
                     } else {
                         ofSetColor((int)0);
                     }
-                    
+
                     //ofSetColor(ofRandom(0,255));
-                    ofRect(i + sin(ofGetFrameNum()/ 100.0) * 1500,j, 50, 50);
+                    ofRect(i + sin((float)ff/ 300.0) * 1500,j, 50, 50);
                 } else {
-                    
-                    
+
+
                     if ((j/50) % 10 == 0){
                         ofSetColor((int)255);
                     } else {
                         ofSetColor((int)0);
                     }
-                    
+
                     //ofSetColor(ofRandom(0,255));
-                    ofRect(i ,j + sin(ofGetFrameNum()/ 100.0) * 1500, 50, 50);
-                    
+                    ofRect(i ,j + sin((float)ff/ 300.0) * 1500, 50, 50);
+
                 }
             }
         }
         fbo.end();
-        
+
     }
 
 
