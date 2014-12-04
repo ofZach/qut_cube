@@ -139,6 +139,9 @@ void ofApp::setup(){
             sender[i].setup("172.21.4." + ofToString(i + 11), 6667);
         }
     }
+    
+    projectorEvent(0.573047);
+
 
 }
 
