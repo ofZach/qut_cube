@@ -217,10 +217,11 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
 
+<<<<<<< HEAD
 
 
 
-    fbo.begin();
+/*fbo.begin();
     LB.resetCounter();
     for (int i = 0; i < currentLines.size(); i++){
         currentLines[i].appendMesh(&LB, scale);
@@ -254,7 +255,7 @@ void ofApp::draw(){
 
     fbo.end();
 
-
+    */
 
     ofBackground(ofColor::pink);
 

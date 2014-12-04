@@ -28,7 +28,7 @@ void ofApp::update(){
     
     
     
-    scaleSmooth = 0.99f * scaleSmooth + 0.01 * ofMap(mouseX, 0,ofGetWidth(), -1, 15, true);
+    scaleSmooth = 0.99f * scaleSmooth + 0.01 * ofMap(mouseX, 0,ofGetWidth(), -1, 35, true);
     
     cout << powf(10, scaleSmooth) << endl;
     
