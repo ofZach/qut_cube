@@ -41,6 +41,13 @@ class ofApp : public ofBaseApp{
         SM.clients[0].rects[1].interiorPct.y = 0.8367880727 - overlapPct;
         SM.clients[0].rects[1].interiorPct.height = overlapPct;
         
+        SM.clients[1].rects[0].interiorPct.height = overlapPct;
+        
+        SM.clients[1].rects[1].interiorPct.y = 0.8367880727 - overlapPct;
+        SM.clients[1].rects[1].interiorPct.height = overlapPct;
+        
+        
+        
         //scale = _scale;
     }
 
