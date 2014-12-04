@@ -237,6 +237,7 @@ void ofApp::draw(){
     //else
     ofTranslate(halfWindow);
 
+    ofScale(1.5, 1.5,0);
 
     ink.bind();
     LB.drawStart();
