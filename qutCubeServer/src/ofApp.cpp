@@ -9,9 +9,12 @@ void ofApp::setup(){
     for (int i = 0; i < 12; i++){
          sender[i].setup("172.21.4." + ofToString(i + 11), 6667);
     }
+    
+    ofSetFrameRate(60);
    
 }
 
+float scaleSmooth = 0;
 //--------------------------------------------------------------
 void ofApp::update(){
 
@@ -22,6 +25,25 @@ void ofApp::update(){
     for (int i = 0; i < 12; i++){
         sender[i].sendMessage(m);
     }
+    
+    
+    
+    scaleSmooth = 0.99f * scaleSmooth + 0.01 * ofMap(mouseX, 0,ofGetWidth(), -1, 15, true);
+    
+    cout << powf(10, scaleSmooth) << endl;
+    
+    
+    
+    ofxOscMessage m2;
+    m2.setAddress("/scale");
+    m2.addFloatArg(powf(10, scaleSmooth));
+    for (int i = 0; i < 12; i++){
+        sender[i].sendMessage(m2);
+    }
+    
+    //cout << scale << endl;
+    
+    
 }
 
 //--------------------------------------------------------------
