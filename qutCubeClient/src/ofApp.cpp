@@ -45,7 +45,7 @@ void ofApp::setup(){
     screenBounds.set(0,0, windoww, windowh);
 
     if (SM.whichClientAmI() < 2){
-        screenBounds.set(0,0,1920, 1750);
+        //screenBounds.set(0,0,1920, 1750);
     }
 
     //cout << 1920 << " " << 1750 << " " << windoww << " " << windowh << endl;
@@ -217,11 +217,11 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
 
-<<<<<<< HEAD
 
 
 
-/*fbo.begin();
+
+fbo.begin();
     LB.resetCounter();
     for (int i = 0; i < currentLines.size(); i++){
         currentLines[i].appendMesh(&LB, scale);
@@ -255,7 +255,7 @@ void ofApp::draw(){
 
     fbo.end();
 
-    */
+
 
     ofBackground(ofColor::pink);
 
@@ -312,10 +312,21 @@ void ofApp::draw(){
     font.drawString(ipStr, 100,200);
     font.drawString("client: " + ofToString(clientID) + "\nframe : " + ofToString(frame) + "\nscene : " + ofToString(scene), 100,350);
 
-    //ofSetColor(ofColor::cyan);
-    //ofSetLineWidth(10);
-    //ofLine(0,0,screenBounds.width, screenBounds.height);
-    //ofLine(0,screenBounds.width,0, screenBounds.height);
+    ofSetColor(ofColor::cyan);
+    ofSetLineWidth(1);
+    ofLine(screenBounds.width,0,0, screenBounds.height);
+
+    ofSetColor(ofColor::magenta);
+
+    for (int i = 0; i < nViews; i++){
+        ofRectangle extr = SC.rects[i].exteriorPct;
+        ofRectangle intr = SC.rects[i].interiorPct;
+        ofLine(0,0,extr.width*screenBounds.width, extr.height*screenBounds.height);
+
+    }
+    //ofLine(0,,0, screenBounds.height);
+
+
 
 
     if (missedFrameEnergy > 0.01){
@@ -325,6 +336,7 @@ void ofApp::draw(){
     }
 
 
+    cout << screenBounds.width << " " << screenBounds.height << endl;
 
 
 //    ofRectangle bigPixDim;
