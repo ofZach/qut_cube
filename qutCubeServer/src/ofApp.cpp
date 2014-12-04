@@ -34,18 +34,25 @@ void ofApp::update(){
     
     
     
-//    ofxOscMessage m2;
-//    m2.setAddress("/scale");
-//    m2.addFloatArg(powf(10, scaleSmooth));
-//    for (int i = 0; i < 12; i++){
-//        sender[i].sendMessage(m2);
-//    }
+//0.573047
 
-    ofxOscMessage m2;
-    m2.setAddress("/projector");
-    m2.addFloatArg( ofMap(mouseX, 0, ofGetWidth(), 0, 1));
-    for (int i = 0; i < 12; i++){
-        sender[i].sendMessage(m2);
+    
+    if (ofGetMousePressed()){
+        ofxOscMessage m2;
+        m2.setAddress("/projector");
+        m2.addFloatArg( ofMap(mouseX, 0, ofGetWidth(), 0.55, 0.60));
+        for (int i = 0; i < 12; i++){
+            sender[i].sendMessage(m2);
+        }
+        cout << ofMap(mouseX, 0, ofGetWidth(), 0.3, 0.7) << endl;
+    } else {
+        ofxOscMessage m2;
+        m2.setAddress("/scale");
+        m2.addFloatArg(powf(10, scaleSmooth));
+        for (int i = 0; i < 12; i++){
+            sender[i].sendMessage(m2);
+        }
+        
     }
 
     

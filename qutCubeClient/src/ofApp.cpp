@@ -1,21 +1,20 @@
 #include "ofApp.h"
 #include "ofAppGLFWWindow.h"
 
+#include "ofxOsc.h"
 
-void scroll(GLFWwindow* aa,double a,double b){
-    cout << "here baby " << a << " " << b << endl;
-}
+ofxOscSender sender[12];
+
 
 //--------------------------------------------------------------
 void ofApp::setup(){
 
+    
+    scene = 2;
 
     ofAppGLFWWindow * wp = (ofAppGLFWWindow *) window;
 
-
-
-    glfwSetScrollCallback (wp->getGLFWWindow(), scroll);
-
+    
 
     font.loadFont("frabk.ttf", 100);
 
@@ -86,7 +85,6 @@ void ofApp::setup(){
 
 
     frame = 0;
-    scene = 0;
 
     //---------------------------------- zoom draw
 
@@ -132,9 +130,15 @@ void ofApp::setup(){
     LB.allocateGPUmem();
     LB_drawnLine.setupVbo();
     LB_drawnLine.allocateGPUmem();
-    ofSetVerticalSync(false);
+    ofSetVerticalSync(true);
     ofSetFrameRate(0);
 
+    
+    if (SM.whichClientAmI() ==0){
+        for (int i = 0; i < 12; i++){
+            sender[i].setup("172.21.4." + ofToString(i + 11), 6667);
+        }
+    }
 
 }
 
@@ -211,6 +215,15 @@ void ofApp::update(){
             currentLines[i].update(scale);
         }
     }
+    
+    if (scene == 2 && SM.whichClientAmI() == 0){
+        ofxOscMessage m;
+        m.setAddress("/frame");
+        m.addIntArg(ofGetFrameNum());
+        for (int i = 0; i < 12; i++){
+            sender[i].sendMessage(m);
+        }
+    }
 
 }
 
@@ -221,40 +234,109 @@ void ofApp::draw(){
 
 
 
-fbo.begin();
-    LB.resetCounter();
-    for (int i = 0; i < currentLines.size(); i++){
-        currentLines[i].appendMesh(&LB, scale);
+    if (scene == 0){
+        fbo.begin();
+        LB.resetCounter();
+        for (int i = 0; i < currentLines.size(); i++){
+            currentLines[i].appendMesh(&LB, scale);
+        }
+
+
+        ofClear(0,0,0);
+        ofPushMatrix();
+        ofSetColor(255);
+        ofEnableAlphaBlending();
+        glBlendFunc(GL_ONE, GL_SRC_COLOR);
+
+        //if (bIsRetina) ofTranslate(halfWindow/2);
+        //else
+        ofTranslate(halfWindow);
+
+        ofScale(1.5, 1.5,0);
+
+        ink.bind();
+        LB.drawStart();
+        LB.drawLoadData();
+        LB.drawStartState();
+        LB.draw();
+        LB.drawEnd();
+
+        ink.unbind();
+        ofDisableBlendMode();
+        ofPopMatrix();
+
+        ofSetColor(255);
+
+        fbo.end();
+    } else if (scene == 1){
+        
+        
+        ofRectangle overallRect = SM.get2dResolution();
+        
+        fbo.begin();
+        
+        for (int i = 0; i < overallRect.width; i+=50){
+            for (int j = 0; j < overallRect.height; j+=50){
+                
+                float pctx = ofMap(i, 0, overallRect.getWidth(), 100, 250);
+                float pcty = 0;
+                
+                if ((j/50) % 2 == 0){
+                    if ((i/50) % 2 == 0) ofSetColor((int)pctx);
+                    else ofSetColor((int)pcty);
+                } else {
+                    if ((i/50) % 2 == 0) ofSetColor((int)pcty);
+                    else ofSetColor((int)pctx);
+                }
+                
+                //ofSetColor(ofRandom(0,255));
+                ofRect(i,j, 50, 50);
+            }
+        }
+        
+        fbo.end();
+    } else {
+        
+        fbo.begin();
+        ofClear(0,0,0,255);
+        cout << "here yo " << endl;
+        ofRectangle overallRect = SM.get2dResolution();
+        
+        
+        int ff = ofGetFrameNum();
+        for (int i = -800; i < overallRect.width; i+=50){
+            for (int j = -800; j < overallRect.height; j+=50){
+                
+                if ((ff / 1000) % 2 == 0){
+                    float pctx = ofMap(i, 0, overallRect.getWidth(), 100, 250);
+                    float pcty = 0;
+                    
+                    if ((i/50) % 10 == 0){
+                       ofSetColor((int)255);
+                    } else {
+                        ofSetColor((int)0);
+                    }
+                    
+                    //ofSetColor(ofRandom(0,255));
+                    ofRect(i + sin(ofGetFrameNum()/ 100.0) * 1500,j, 50, 50);
+                } else {
+                    
+                    
+                    if ((j/50) % 10 == 0){
+                        ofSetColor((int)255);
+                    } else {
+                        ofSetColor((int)0);
+                    }
+                    
+                    //ofSetColor(ofRandom(0,255));
+                    ofRect(i ,j + sin(ofGetFrameNum()/ 100.0) * 1500, 50, 50);
+                    
+                }
+            }
+        }
+        fbo.end();
+        
     }
-
-
-    ofClear(0,0,0);
-    ofPushMatrix();
-    ofSetColor(255);
-    ofEnableAlphaBlending();
-    glBlendFunc(GL_ONE, GL_SRC_COLOR);
-
-    //if (bIsRetina) ofTranslate(halfWindow/2);
-    //else
-    ofTranslate(halfWindow);
-
-    ofScale(1.5, 1.5,0);
-
-    ink.bind();
-    LB.drawStart();
-    LB.drawLoadData();
-    LB.drawStartState();
-    LB.draw();
-    LB.drawEnd();
-
-    ink.unbind();
-    ofDisableBlendMode();
-    ofPopMatrix();
-
-    ofSetColor(255);
-
-    fbo.end();
-
 
 
     ofBackground(ofColor::pink);
