@@ -23,6 +23,10 @@ void communicationManager::update(){
             appPtr->sceneEvent(m.getArgAsInt32(0));
         }
         
+        if (addr == "/scale"){
+            appPtr->sceneEvent(m.getArgAsFloat(0));
+        }
+        
         if (addr == "/reset"){
             bReset = true;
         }

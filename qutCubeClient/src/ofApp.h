@@ -4,6 +4,13 @@
 #include "settingsManager.h"
 #include "communicationManager.h"
 
+//------------------------------ zoom draw
+#include "linesWithScale.h"
+#include "dataIO.h"
+#include "ofxPanZoom.h"
+#include "lineBatcher.h"
+
+
 class ofApp : public ofBaseApp{
 
 	public:
@@ -21,6 +28,12 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     
+    
+    
+    void scaleEvent(float _scale){
+        scale = _scale;
+    }
+
     
         void frameEvent(int newFrame);
         void sceneEvent(int newScene);
@@ -42,6 +55,33 @@ class ofApp : public ofBaseApp{
         ofRectangle screenBounds;
     
         float missedFrameEnergy;
+    
+        void * window;
+    
+    
+    //--------------------
+    
+    ofImage ink;
+    lineBatcher LB;
+    lineBatcher LB_drawnLine;       // if we have a currently drawn line, let's drawn on top of FBO
+    float scale;
+    float logScale;
+    float logScalePrevFrame;
+    float scaleChange;
+    vector < linesWithScale > currentLines;
+    ofPoint halfWindow;
+    ofPoint     halfWindowCatch;
+    bool    bZoomedSinceDrawStart;
+    bool    bEnableZoom;
+    bool    bIsRetina;
+    ofFbo lineFbo;
+    ofFbo       wholeScreen;
+    ofFbo       smallFbo;
+    ofImage     smallScreenshot;
+    ofVbo       meshy;
+    ofMesh      mesh;
+    ofxPanZoom  cam;
+    dataIO dat;
     
     
 };

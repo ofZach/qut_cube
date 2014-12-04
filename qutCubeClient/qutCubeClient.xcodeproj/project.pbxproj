@@ -45,6 +45,11 @@
 		E7E077E815D3B6510020DFD4 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E077E715D3B6510020DFD4 /* QTKit.framework */; };
 		E7F985F815E0DEA3003869B5 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7F985F515E0DE99003869B5 /* Accelerate.framework */; };
 		FDA644921A2E88CF00D2A40E /* communicationManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FDA644911A2E88CF00D2A40E /* communicationManager.cpp */; };
+		FDDCD9981A307D7E00B1B06D /* dataIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FDDCD98B1A307D7E00B1B06D /* dataIO.cpp */; };
+		FDDCD9991A307D7E00B1B06D /* lineBatcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FDDCD98D1A307D7E00B1B06D /* lineBatcher.cpp */; };
+		FDDCD99A1A307D7E00B1B06D /* linesWithScale.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FDDCD9911A307D7E00B1B06D /* linesWithScale.cpp */; };
+		FDDCD99B1A307D7E00B1B06D /* vwLineSimplifier.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FDDCD9941A307D7E00B1B06D /* vwLineSimplifier.cpp */; };
+		FDDCD99C1A307D7E00B1B06D /* ofxPanZoom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FDDCD9961A307D7E00B1B06D /* ofxPanZoom.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -144,6 +149,18 @@
 		FD4AAB661A2CE96500BA4B13 /* settingsManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = settingsManager.h; sourceTree = "<group>"; };
 		FD4AAB671A2CE97000BA4B13 /* communicationManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = communicationManager.h; sourceTree = "<group>"; };
 		FDA644911A2E88CF00D2A40E /* communicationManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = communicationManager.cpp; sourceTree = "<group>"; };
+		FDDCD98B1A307D7E00B1B06D /* dataIO.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dataIO.cpp; sourceTree = "<group>"; };
+		FDDCD98C1A307D7E00B1B06D /* dataIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dataIO.h; sourceTree = "<group>"; };
+		FDDCD98D1A307D7E00B1B06D /* lineBatcher.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lineBatcher.cpp; sourceTree = "<group>"; };
+		FDDCD98E1A307D7E00B1B06D /* lineBatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lineBatcher.h; sourceTree = "<group>"; };
+		FDDCD9901A307D7E00B1B06D /* lineDrawer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lineDrawer.h; sourceTree = "<group>"; };
+		FDDCD9911A307D7E00B1B06D /* linesWithScale.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = linesWithScale.cpp; sourceTree = "<group>"; };
+		FDDCD9921A307D7E00B1B06D /* linesWithScale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = linesWithScale.h; sourceTree = "<group>"; };
+		FDDCD9931A307D7E00B1B06D /* lineTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lineTypes.h; sourceTree = "<group>"; };
+		FDDCD9941A307D7E00B1B06D /* vwLineSimplifier.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vwLineSimplifier.cpp; sourceTree = "<group>"; };
+		FDDCD9951A307D7E00B1B06D /* vwLineSimplifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vwLineSimplifier.h; sourceTree = "<group>"; };
+		FDDCD9961A307D7E00B1B06D /* ofxPanZoom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxPanZoom.cpp; sourceTree = "<group>"; };
+		FDDCD9971A307D7E00B1B06D /* ofxPanZoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxPanZoom.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -354,6 +371,7 @@
 		E4B69E1C0A3A1BDC003C02F2 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				FDDCD9891A307D7E00B1B06D /* zoomDraw */,
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* ofApp.h */,
@@ -380,6 +398,41 @@
 				38871A5825686AE018EC2BF0 /* libs */,
 			);
 			name = ofxOsc;
+			sourceTree = "<group>";
+		};
+		FDDCD9891A307D7E00B1B06D /* zoomDraw */ = {
+			isa = PBXGroup;
+			children = (
+				FDDCD98A1A307D7E00B1B06D /* IO */,
+				FDDCD98D1A307D7E00B1B06D /* lineBatcher.cpp */,
+				FDDCD98E1A307D7E00B1B06D /* lineBatcher.h */,
+				FDDCD98F1A307D7E00B1B06D /* lines */,
+				FDDCD9961A307D7E00B1B06D /* ofxPanZoom.cpp */,
+				FDDCD9971A307D7E00B1B06D /* ofxPanZoom.h */,
+			);
+			path = zoomDraw;
+			sourceTree = "<group>";
+		};
+		FDDCD98A1A307D7E00B1B06D /* IO */ = {
+			isa = PBXGroup;
+			children = (
+				FDDCD98B1A307D7E00B1B06D /* dataIO.cpp */,
+				FDDCD98C1A307D7E00B1B06D /* dataIO.h */,
+			);
+			path = IO;
+			sourceTree = "<group>";
+		};
+		FDDCD98F1A307D7E00B1B06D /* lines */ = {
+			isa = PBXGroup;
+			children = (
+				FDDCD9901A307D7E00B1B06D /* lineDrawer.h */,
+				FDDCD9911A307D7E00B1B06D /* linesWithScale.cpp */,
+				FDDCD9921A307D7E00B1B06D /* linesWithScale.h */,
+				FDDCD9931A307D7E00B1B06D /* lineTypes.h */,
+				FDDCD9941A307D7E00B1B06D /* vwLineSimplifier.cpp */,
+				FDDCD9951A307D7E00B1B06D /* vwLineSimplifier.h */,
+			);
+			path = lines;
 			sourceTree = "<group>";
 		};
 		FF8CDF57858E9B94E3237115 /* ip */ = {
@@ -486,9 +539,11 @@
 			files = (
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
 				E4B69E210A3A1BDC003C02F2 /* ofApp.cpp in Sources */,
+				FDDCD99B1A307D7E00B1B06D /* vwLineSimplifier.cpp in Sources */,
 				72A929D3561B8232A182ABFC /* ofxOscBundle.cpp in Sources */,
 				5864AD82E20F15536D054EA3 /* ofxOscMessage.cpp in Sources */,
 				4ADB88E2FB52E76A471065DE /* ofxOscParameterSync.cpp in Sources */,
+				FDDCD99C1A307D7E00B1B06D /* ofxPanZoom.cpp in Sources */,
 				640279EE111671BD026CB013 /* ofxOscReceiver.cpp in Sources */,
 				8F5205AEF8861EF234F0651A /* ofxOscSender.cpp in Sources */,
 				ADE367465D2A8EBAD4C7A8D9 /* IpEndpointName.cpp in Sources */,
@@ -497,9 +552,12 @@
 				A29D8C96AE042ECEAA1BD4F3 /* NetworkingUtilsWin.cpp in Sources */,
 				28090DEB5109115003E8F1C5 /* UdpSocketWin.cpp in Sources */,
 				62545D179C94265CA1389D4A /* OscOutboundPacketStream.cpp in Sources */,
+				FDDCD9981A307D7E00B1B06D /* dataIO.cpp in Sources */,
 				FDA644921A2E88CF00D2A40E /* communicationManager.cpp in Sources */,
 				C4782ECC372420ACE0615B74 /* OscPrintReceivedElements.cpp in Sources */,
+				FDDCD9991A307D7E00B1B06D /* lineBatcher.cpp in Sources */,
 				0546D1A38E13BD319CC9755B /* OscReceivedElements.cpp in Sources */,
+				FDDCD99A1A307D7E00B1B06D /* linesWithScale.cpp in Sources */,
 				879A251454401BC0B6E4F238 /* OscTypes.cpp in Sources */,
 				63B57AC5BF4EF088491E0317 /* ofxXmlSettings.cpp in Sources */,
 				933A2227713C720CEFF80FD9 /* tinyxml.cpp in Sources */,

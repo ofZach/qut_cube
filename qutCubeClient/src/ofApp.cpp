@@ -1,9 +1,21 @@
 #include "ofApp.h"
+#include "ofAppGLFWWindow.h"
+
+
+void scroll(GLFWwindow* aa,double a,double b){
+    cout << "here baby " << a << " " << b << endl;
+}
 
 //--------------------------------------------------------------
 void ofApp::setup(){
 
+    
+    ofAppGLFWWindow * wp = (ofAppGLFWWindow *) window;
+    
+    
 
+    glfwSetScrollCallback (wp->getGLFWWindow(), scroll);
+    
 
     font.loadFont("frabk.ttf", 100);
 
@@ -75,6 +87,53 @@ void ofApp::setup(){
     
     frame = 0;
     scene = 0;
+    
+    //---------------------------------- zoom draw
+    
+    ink.loadImage("images/ink8.jpg");
+    dat.loadData("melissa2/lines.dat");
+    ink.getTextureReference().bind();
+    ink.getTextureReference().unbind();
+    ofSetCircleResolution(80);
+    scale = 1;
+    logScale = log(scale);
+    logScalePrevFrame = logScale;
+    
+    
+    ofRectangle bigPixDim;
+    ofRectangle smallPixDim;
+    ofRectangle smallInWorldDim;
+    ofRectangle total;
+
+    bigPixDim.set(0,0,1920, 1750);
+    smallPixDim.set(0, 0, 1080, 1920);
+    float aspectRatio = 1080.0 / 1920.0;
+    smallInWorldDim.set(0,0, 1920/10.0, (1/aspectRatio) * (1920/10.0));
+    total.set(0,0, 1920*2, 1750 + smallInWorldDim.getHeight());
+    
+    
+    halfWindow.set(total.width/2, total.height/2);
+    halfWindowCatch = halfWindow;
+    cam.setZoom(1.0f);
+	cam.setMinZoom(1e-37);
+	cam.setMaxZoom(1e+37);
+	cam.setScreenSize( ofGetWidth(), ofGetHeight() ); //tell the system how large is out screen
+    bZoomedSinceDrawStart = false;
+    bEnableZoom = true;
+    lineFbo.allocate( ofGetWidth(), ofGetHeight(), GL_RGB);
+    smallFbo.allocate(640,480, GL_RGB);
+    wholeScreen.allocate( ofGetWidth(), ofGetHeight(), GL_RGB);
+    smallScreenshot.allocate(200, 200, OF_IMAGE_COLOR);
+    for (int i= 0; i < 200*200; i++){
+        smallScreenshot.setColor(i % 200, i/200, ofColor(i%200, i/200, 255));
+    }
+    smallScreenshot.update();
+    LB.setupVbo();
+    LB.allocateGPUmem();
+    LB_drawnLine.setupVbo();
+    LB_drawnLine.allocateGPUmem();
+    ofSetVerticalSync(false);
+    ofSetFrameRate(0);
 
 
 }
@@ -134,12 +193,67 @@ void ofApp::update(){
 
     }
 #endif
+    
+    
+    //---------- zoom
+    
+    cam.update(0.016f);
+	cam.lookAt(halfWindow);
+    //scale = 0.9 * scale + 0.1 * (1.0/cam.getZoom());
+    //scale = ofMap(ofGetMouseX(), 0, ofGetWidth(), 1, 1000000, true);
+    logScale = log(scale);
+    float dxScale = logScale -logScalePrevFrame;
+    scaleChange = dxScale;
+    logScalePrevFrame = logScale;
+    
+    if (fabs(scaleChange) > 0.0001){
+        for (int i = 0; i < currentLines.size(); i++){
+            currentLines[i].update(scale);
+        }
+    }
 
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
 
+    
+   
+    
+    fbo.begin();
+    LB.resetCounter();
+    for (int i = 0; i < currentLines.size(); i++){
+        currentLines[i].appendMesh(&LB, scale);
+    }
+    
+    
+    ofClear(0,0,0);
+    ofPushMatrix();
+    ofSetColor(255);
+    ofEnableAlphaBlending();
+    glBlendFunc(GL_ONE, GL_SRC_COLOR);
+    
+    //if (bIsRetina) ofTranslate(halfWindow/2);
+    //else
+    ofTranslate(halfWindow);
+    
+    
+    ink.bind();
+    LB.drawStart();
+    LB.drawLoadData();
+    LB.drawStartState();
+    LB.draw();
+    LB.drawEnd();
+    
+    ink.unbind();
+    ofDisableBlendMode();
+    ofPopMatrix();
+    
+    ofSetColor(255);
+    
+    fbo.end();
+    
+    
 
     ofBackground(ofColor::pink);
 
@@ -207,6 +321,62 @@ void ofApp::draw(){
             ofRect(screenBounds);
         
     }
+
+    
+    
+    
+//    ofRectangle bigPixDim;
+//    ofRectangle smallPixDim;
+//    ofRectangle smallInWorldDim;
+//    ofRectangle total;
+//
+//    bigPixDim.set(0,0,1920, 1750);
+//    smallPixDim.set(0, 0, 1080, 1920);
+//    float aspectRatio = 1080.0 / 1920.0;
+//    smallInWorldDim.set(0,0, 1920/10.0, (1/aspectRatio) * (1920/10.0));
+//    total.set(0,0, 1920*2, 1750 + smallInWorldDim.getHeight());
+//
+//
+//    ofScale(0.3,0.3);
+//    for (int i = 0; i < SM.clients.size(); i++){
+//        for (int j = 0; j < SM.clients[i].nViews; j++){
+//
+//            float x = total.width * SM.clients[i].rects[j].interiorPct.x;
+//            float y = total.height * SM.clients[i].rects[j].interiorPct.y;
+//            float w = total.width * SM.clients[i].rects[j].interiorPct.width;
+//            float h = total.height * SM.clients[i].rects[j].interiorPct.height;
+//
+//            float xt =  SM.clients[i].rects[j].interiorPct.x;
+//            float yt =  SM.clients[i].rects[j].interiorPct.y;
+//            float wt =  SM.clients[i].rects[j].interiorPct.width;
+//            float ht =  SM.clients[i].rects[j].interiorPct.height;
+//
+//            ofMesh mesh;
+//            mesh.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
+//
+//            mesh.addVertex( ofPoint(x,y) );
+//            mesh.addTexCoord( fbo.getTextureReference().getCoordFromPercent(xt, yt) );
+//
+//            mesh.addVertex( ofPoint(x+w,y) );
+//            mesh.addTexCoord( fbo.getTextureReference().getCoordFromPercent(xt+wt, yt) );
+//
+//            mesh.addVertex( ofPoint(x,y+h) );
+//            mesh.addTexCoord( fbo.getTextureReference().getCoordFromPercent(xt, yt+ht) );
+//
+//            mesh.addVertex( ofPoint(x+w,y+h) );
+//            mesh.addTexCoord( fbo.getTextureReference().getCoordFromPercent(xt+wt, yt+ht) );
+//
+//
+//            fbo.getTextureReference().bind();
+//            mesh.draw();
+//            fbo.getTextureReference().unbind();
+//            //ofSetColor(100 + ofRandom(20));
+//
+//            //ofRect(x,y,w,h);
+//
+//
+//        }
+//    }
 
 }
 
