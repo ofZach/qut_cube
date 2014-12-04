@@ -31,6 +31,10 @@ void communicationManager::update(){
             bReset = true;
         }
         
+        if (addr == "/projector"){
+           appPtr->projectorEvent(m.getArgAsFloat(0));
+        }
+        
         if (addr == "/debug"){
             bool bDebug = m.getArgAsInt32(0) == 0 ? false : true;
             appPtr->debugEvent(bDebug);

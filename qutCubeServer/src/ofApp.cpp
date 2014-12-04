@@ -10,7 +10,7 @@ void ofApp::setup(){
          sender[i].setup("172.21.4." + ofToString(i + 11), 6667);
     }
     
-    ofSetFrameRate(60);
+    ofSetFrameRate(24);
    
 }
 
