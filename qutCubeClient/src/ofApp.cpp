@@ -9,13 +9,13 @@ void scroll(GLFWwindow* aa,double a,double b){
 //--------------------------------------------------------------
 void ofApp::setup(){
 
-    
+
     ofAppGLFWWindow * wp = (ofAppGLFWWindow *) window;
-    
-    
+
+
 
     glfwSetScrollCallback (wp->getGLFWWindow(), scroll);
-    
+
 
     font.loadFont("frabk.ttf", 100);
 
@@ -25,9 +25,9 @@ void ofApp::setup(){
 
     CM.setup();
     CM.appPtr = this;
-    
-    
-    
+
+
+
 #ifdef WIN32
     int windoww = GetSystemMetrics(SM_CXVIRTUALSCREEN);
     int windowh = GetSystemMetrics(SM_CYVIRTUALSCREEN);
@@ -84,12 +84,12 @@ void ofApp::setup(){
     fbo.end();
 
 
-    
+
     frame = 0;
     scene = 0;
-    
+
     //---------------------------------- zoom draw
-    
+
     ink.loadImage("images/ink8.jpg");
     dat.loadData("melissa2/lines.dat");
     ink.getTextureReference().bind();
@@ -98,8 +98,8 @@ void ofApp::setup(){
     scale = 1;
     logScale = log(scale);
     logScalePrevFrame = logScale;
-    
-    
+
+
     ofRectangle bigPixDim;
     ofRectangle smallPixDim;
     ofRectangle smallInWorldDim;
@@ -110,8 +110,8 @@ void ofApp::setup(){
     float aspectRatio = 1080.0 / 1920.0;
     smallInWorldDim.set(0,0, 1920/10.0, (1/aspectRatio) * (1920/10.0));
     total.set(0,0, 1920*2, 1750 + smallInWorldDim.getHeight());
-    
-    
+
+
     halfWindow.set(total.width/2, total.height/2);
     halfWindowCatch = halfWindow;
     cam.setZoom(1.0f);
@@ -139,22 +139,22 @@ void ofApp::setup(){
 }
 
 void ofApp::frameEvent(int newFrame){
-    
+
     if (ofGetMousePressed()) return;
-    
+
     int prevFrame = frame;
     frame = newFrame;
     if ((newFrame - prevFrame) != 1){
         missedFrameEnergy = 1.0;
     }
-    
+
 }
 void ofApp::sceneEvent(int newScene){
     scene = newScene;
 }
 
 void ofApp::debugEvent(bool bBeDebug){
-    
+
     if (bBeDebug){
         #ifdef WIN32
                 HWND cmd = GetConsoleWindow(); // get handle to console window
@@ -166,12 +166,12 @@ void ofApp::debugEvent(bool bBeDebug){
                 HWND cmd = ofGetWin32Window(); // get handle to console window
                 ::SetForegroundWindow(cmd);
         #endif
-        
+
     }
 }
 
 void ofApp::resetEvent(){
-    
+
 }
 
 
@@ -183,7 +183,7 @@ void ofApp::update(){
 
     CM.update();
     missedFrameEnergy *= 0.99f;
-    
+
     #ifdef WIN32
     if (ofGetFrameNum() < 50){
         //HWND hwnd = ofGetWin32Window();
@@ -193,10 +193,10 @@ void ofApp::update(){
 
     }
 #endif
-    
-    
+
+
     //---------- zoom
-    
+
     cam.update(0.016f);
 	cam.lookAt(halfWindow);
     //scale = 0.9 * scale + 0.1 * (1.0/cam.getZoom());
@@ -205,7 +205,7 @@ void ofApp::update(){
     float dxScale = logScale -logScalePrevFrame;
     scaleChange = dxScale;
     logScalePrevFrame = logScale;
-    
+
     if (fabs(scaleChange) > 0.0001){
         for (int i = 0; i < currentLines.size(); i++){
             currentLines[i].update(scale);
@@ -217,43 +217,43 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
 
-    
-   
-    
+
+
+
     fbo.begin();
     LB.resetCounter();
     for (int i = 0; i < currentLines.size(); i++){
         currentLines[i].appendMesh(&LB, scale);
     }
-    
-    
+
+
     ofClear(0,0,0);
     ofPushMatrix();
     ofSetColor(255);
     ofEnableAlphaBlending();
     glBlendFunc(GL_ONE, GL_SRC_COLOR);
-    
+
     //if (bIsRetina) ofTranslate(halfWindow/2);
     //else
     ofTranslate(halfWindow);
-    
-    
+
+
     ink.bind();
     LB.drawStart();
     LB.drawLoadData();
     LB.drawStartState();
     LB.draw();
     LB.drawEnd();
-    
+
     ink.unbind();
     ofDisableBlendMode();
     ofPopMatrix();
-    
+
     ofSetColor(255);
-    
+
     fbo.end();
-    
-    
+
+
 
     ofBackground(ofColor::pink);
 
@@ -281,7 +281,7 @@ void ofApp::draw(){
         float wt =  intr.width;
         float ht =  intr.height;
 
-        
+
         ofMesh mesh;
         mesh.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
 
@@ -309,22 +309,22 @@ void ofApp::draw(){
     ofSetColor(ofColor::red);
     font.drawString(ipStr, 100,200);
     font.drawString("client: " + ofToString(clientID) + "\nframe : " + ofToString(frame) + "\nscene : " + ofToString(scene), 100,350);
-    
-    ofSetColor(ofColor::cyan);
-    ofSetLineWidth(10);
-    ofLine(0,0,screenBounds.width, screenBounds.height);
-    ofLine(0,screenBounds.width,0, screenBounds.height);
 
-    
+    //ofSetColor(ofColor::cyan);
+    //ofSetLineWidth(10);
+    //ofLine(0,0,screenBounds.width, screenBounds.height);
+    //ofLine(0,screenBounds.width,0, screenBounds.height);
+
+
     if (missedFrameEnergy > 0.01){
         ofSetColor(255,0,255,255*missedFrameEnergy);
             ofRect(screenBounds);
-        
+
     }
 
-    
-    
-    
+
+
+
 //    ofRectangle bigPixDim;
 //    ofRectangle smallPixDim;
 //    ofRectangle smallInWorldDim;
